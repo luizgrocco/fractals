@@ -13,7 +13,7 @@ import { Debug } from "./components/3d/debug";
 function App() {
   return (
     <>
-      <Suspense fallback={"loading ..."}>
+      <Suspense fallback={"loading environment..."}>
         <Controls />
         <Canvas style={{ backgroundColor: "darkgray" }}>
           <PerspectiveCamera
