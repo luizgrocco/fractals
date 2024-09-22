@@ -15,7 +15,7 @@ function App() {
     <>
       <Suspense fallback={"loading environment..."}>
         <Controls />
-        <Canvas style={{ backgroundColor: "darkgray" }}>
+        <Canvas className="bg-slate-400">
           <PerspectiveCamera
             makeDefault
             position={[7, 5, 7]}
