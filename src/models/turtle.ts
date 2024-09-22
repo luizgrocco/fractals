@@ -12,22 +12,30 @@ export class Turtle {
   }
 
   render(sentence: string) {
+    // Final array of transformations
     const transformations: Matrix4[] = [];
+    // The object that acts as a turtle, walking in the direction it is facing
     const current = new Object3D();
+    current.scale.multiplyScalar(this.length);
+    // Face the X axis to start
     current.lookAt(1, 0, 0);
 
-    const scalingStack: number[] = [];
+    // Stack of object transformations to be saved and restored
     const stack: Matrix4[] = [];
 
+    // Intermediary direction Vector3
     const direction = new Vector3(0, 0, 0);
-    let scaling = this.length;
 
     const translate = (object: Object3D) => {
+      // This is a copy operation, copies object world direction into the direction Vector3
       object.getWorldDirection(direction);
-      direction.multiplyScalar(this.length * scaling);
+      // Multiply the direction Vector3 by the Lsystem length
+      direction.multiplyScalar(this.length * object.scale.x);
+      // Add the direction Vector3 to the object position, meaning it moves in the direction it is facing
       object.position.add(direction);
     };
 
+    // Convert degrees to radians
     const angleInRadians = (this.angle * Math.PI) / 180;
 
     for (const char of sentence) {
@@ -69,7 +77,6 @@ export class Turtle {
         case "[":
           current.updateMatrix();
           stack.push(current.matrix.clone());
-          scalingStack.push(scaling);
           break;
         case "]":
           current.matrix.copy(stack.pop()!);
@@ -79,20 +86,17 @@ export class Turtle {
             current.scale
           );
           current.updateMatrixWorld();
-          scaling = scalingStack.pop()!;
           break;
         case "½":
-          scaling *= 0.5;
+          current.scale.multiplyScalar(0.5);
           break;
         case "②":
-          scaling *= 2;
+          current.scale.multiplyScalar(2);
           break;
         case "▽":
-          scaling *= this.cubeScale;
           current.scale.multiplyScalar(this.cubeScale);
           break;
         case "△":
-          scaling *= 1 / this.cubeScale;
           current.scale.multiplyScalar(1 / this.cubeScale);
           break;
         default:

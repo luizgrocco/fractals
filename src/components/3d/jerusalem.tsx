@@ -104,7 +104,9 @@ export const JesuralemCube: React.FC = () => {
       ref={instancedMeshRef}
       args={[undefined, undefined, arrayOfMatrices.length]}
     >
-      <boxGeometry args={[1, 1, 1]} />
+      <boxGeometry
+        args={[LSYSTEM_DATA.length, LSYSTEM_DATA.length, LSYSTEM_DATA.length]}
+      />
       <meshStandardMaterial
         map={colorMap}
         metalnessMap={metalnessMap}
