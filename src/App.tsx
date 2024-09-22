@@ -8,7 +8,7 @@ import {
 import { JesuralemCube } from "./components/3d/jerusalem";
 import { Controls } from "./components/custom-ui/controls";
 import { Suspense } from "react";
-import { Debug } from "./components/3d/debug";
+// import { Debug } from "./components/3d/debug";
 
 function App() {
   return (
