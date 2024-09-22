@@ -80,14 +80,13 @@ export const JesuralemCube: React.FC = () => {
 
   const arrayOfMatrices = useMemo(() => {
     const turtle = new Turtle(
-      // LSYSTEM_DATA.length / generations,
       LSYSTEM_DATA.length,
       LSYSTEM_DATA.angleInDegrees,
       smallCubeScale
     );
 
     return turtle.render(sentence);
-  }, [sentence, smallCubeScale, generations]);
+  }, [sentence, smallCubeScale]);
 
   useEffect(() => {
     for (let i = 0; i < arrayOfMatrices.length; i++) {
