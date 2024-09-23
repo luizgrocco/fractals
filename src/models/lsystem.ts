@@ -2,6 +2,8 @@
 // Daniel Shiffman
 // http://natureofcode.com
 
+import { UnlimitedString } from "./unlimited-string";
+
 // An LSystem has a starting sentence
 // An a ruleset
 // Each generation recursively replaces characters in the sentence
@@ -15,12 +17,12 @@ export type Rules = {
 
 export class LSystem {
   axiom: Axiom;
-  sentence: string;
+  sentence: UnlimitedString;
   ruleset: Rules;
 
   constructor(axiom: Axiom, rules: Rules) {
     this.axiom = axiom;
-    this.sentence = axiom; // The sentence (a String)
+    this.sentence = new UnlimitedString(axiom); // The sentence (a String)
     this.ruleset = rules; // The ruleset (an array of Rule objects)
 
     Object.keys(this.ruleset).forEach((key) => {
@@ -29,18 +31,18 @@ export class LSystem {
   }
 
   reset() {
-    this.sentence = this.axiom;
+    this.sentence = new UnlimitedString(this.axiom);
   }
 
   // Generate the next generation
   generate() {
     // An empty string that we will fill
-    let nextgen = "";
+    const nextgen = new UnlimitedString();
 
     // For every character in the sentence
     for (const char of this.sentence) {
       // Replace it with itself unless it matches one of our rules
-      nextgen += this.ruleset[char] ?? char;
+      nextgen.append(this.ruleset[char] ?? char);
     }
 
     // Replace sentence

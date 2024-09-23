@@ -1,4 +1,5 @@
 import { Matrix4, Object3D, Vector3 } from "three";
+import { UnlimitedString } from "./unlimited-string";
 
 export class Turtle {
   length: number;
@@ -11,7 +12,7 @@ export class Turtle {
     this.cubeScale = cubeScale;
   }
 
-  render(sentence: string) {
+  render(sentence: UnlimitedString) {
     // Final array of transformations
     const transformations: Matrix4[] = [];
     // The object that acts as a turtle, walking in the direction it is facing

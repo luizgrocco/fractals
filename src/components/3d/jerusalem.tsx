@@ -1,5 +1,6 @@
 import { Axiom, LSystem, Rules } from "@/models/lsystem";
 import { Turtle } from "@/models/turtle";
+import { UnlimitedString } from "@/models/unlimited-string";
 import { useControlsStore } from "@/store/controls";
 import { useLoader } from "@react-three/fiber";
 import React, { useEffect, useMemo, useRef } from "react";
@@ -70,7 +71,7 @@ export const JesuralemCube: React.FC = () => {
 
   const sentence = useMemo(() => {
     lsystem.reset();
-    let acc = "";
+    let acc = new UnlimitedString();
     for (let i = 0; i < generations; i++) {
       acc = lsystem.generate();
     }
