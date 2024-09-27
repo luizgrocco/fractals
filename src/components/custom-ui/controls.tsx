@@ -26,7 +26,7 @@ export const Controls: React.FC = () => {
           <Slider
             value={generations}
             onValueChange={handleGenerationSlide}
-            max={10}
+            max={6}
             min={0}
             step={1}
             className="w-[200px]"
