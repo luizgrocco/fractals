@@ -79,7 +79,7 @@ export const JesuralemCube: React.FC = () => {
     return acc;
   }, [generations]);
 
-  const arrayOfMatrices = useMemo(() => {
+  const transformations = useMemo(() => {
     const turtle = new Turtle(
       LSYSTEM_DATA.length,
       LSYSTEM_DATA.angleInDegrees,
@@ -90,19 +90,19 @@ export const JesuralemCube: React.FC = () => {
   }, [sentence, smallCubeScale]);
 
   useEffect(() => {
-    for (let i = 0; i < arrayOfMatrices.length; i++) {
+    for (let i = 0; i < transformations.length; i++) {
       if (instancedMeshRef.current)
-        instancedMeshRef.current.setMatrixAt(i, arrayOfMatrices[i]);
+        instancedMeshRef.current.setMatrixAt(i, transformations[i]);
     }
     // Update the instance
     if (instancedMeshRef.current)
       instancedMeshRef.current.instanceMatrix.needsUpdate = true;
-  }, [arrayOfMatrices]);
+  }, [transformations]);
 
   return (
     <instancedMesh
       ref={instancedMeshRef}
-      args={[undefined, undefined, arrayOfMatrices.length]}
+      args={[undefined, undefined, transformations.length]}
     >
       <boxGeometry
         args={[LSYSTEM_DATA.length, LSYSTEM_DATA.length, LSYSTEM_DATA.length]}
