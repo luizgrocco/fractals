@@ -1,4 +1,4 @@
-import { Matrix4, Object3D, Vector3 } from "three";
+import { Matrix4, Object3D, Quaternion, Vector3 } from "three";
 import { UnlimitedString } from "./unlimited-string";
 
 export class Turtle {
@@ -106,5 +106,50 @@ export class Turtle {
     }
 
     return transformations;
+  }
+
+  static normalize(transformations: Matrix4[]): void {
+    if (transformations.length <= 1) return;
+
+    const pos = new Vector3();
+    const quat = new Quaternion();
+    const scl = new Vector3();
+
+    let minX = Infinity, minY = Infinity, minZ = Infinity;
+    let maxX = -Infinity, maxY = -Infinity, maxZ = -Infinity;
+
+    for (const m of transformations) {
+      m.decompose(pos, quat, scl);
+      const halfExtent = scl.x / 2;
+      minX = Math.min(minX, pos.x - halfExtent);
+      minY = Math.min(minY, pos.y - halfExtent);
+      minZ = Math.min(minZ, pos.z - halfExtent);
+      maxX = Math.max(maxX, pos.x + halfExtent);
+      maxY = Math.max(maxY, pos.y + halfExtent);
+      maxZ = Math.max(maxZ, pos.z + halfExtent);
+    }
+
+    const extentX = maxX - minX;
+    const extentY = maxY - minY;
+    const extentZ = maxZ - minZ;
+    const maxExtent = Math.max(extentX, extentY, extentZ);
+    if (maxExtent === 0) return;
+
+    const centerX = (minX + maxX) / 2;
+    const centerY = (minY + maxY) / 2;
+    const centerZ = (minZ + maxZ) / 2;
+
+    const scale = 1 / maxExtent;
+
+    for (const m of transformations) {
+      m.decompose(pos, quat, scl);
+      pos.set(
+        (pos.x - centerX) * scale,
+        (pos.y - centerY) * scale,
+        (pos.z - centerZ) * scale
+      );
+      scl.multiplyScalar(scale);
+      m.compose(pos, quat, scl);
+    }
   }
 }

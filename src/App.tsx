@@ -26,7 +26,7 @@ function App() {
         <Canvas className="bg-slate-400">
           <PerspectiveCamera
             makeDefault
-            position={[7, 5, 7]}
+            position={[1.5, 1, 1.5]}
             near={0.1}
             far={1000}
           />

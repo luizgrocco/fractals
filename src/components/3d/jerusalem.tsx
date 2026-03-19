@@ -1,4 +1,4 @@
-import { Axiom, LSystem, Rules } from "@/models/lsystem";
+import { LSystem } from "@/models/lsystem";
 import { Turtle } from "@/models/turtle";
 import { UnlimitedString } from "@/models/unlimited-string";
 import { useControlsStore } from "@/store/controls";
@@ -15,32 +15,9 @@ const SMALLER_CUBES_UPPER_LOWER_LAYER = "[◻▽◼]→".repeat(SQUARE_SIDES);
 const LARGER_CUBES_UPPER_LOWER_LAYER =
   `${MOVE_HALVES}→${MOVE_HALVES}→` + "◼▽◻△→".repeat(SQUARE_SIDES);
 
-interface LSystemData {
-  axiom: Axiom;
-  rules: Rules;
-  angleInDegrees: number;
-  length: number;
-}
-
-const LSYSTEM_DATA: LSystemData = {
+const LSYSTEM_DATA = {
   axiom: "◼",
   rules: {
-    // Alphabet:
-    //
-    // ←: left
-    // →: right
-    // ↑: up
-    // ↓: down
-    // ⟲ or ⟳: reverse direction (turn 180°)
-    // ◼: draw a box and move
-    // ◻: just move (without drawing a box)
-    // ▽: decrease scale by the given cube scale factor
-    // △: increase scale by the given cube scale factor
-    // ½: decrease scale by a factor of 2
-    // ②: increase scale by a factor of 2
-    // [: save current transformation state (in stack)
-    // ]: restore previous transformation state (from stack)
-    //
     "◼": `
       [${SMALLER_CUBES_CENTER_LAYER}]
       [↑◻↓ ${SMALLER_CUBES_UPPER_LOWER_LAYER}]
@@ -53,15 +30,13 @@ const LSYSTEM_DATA: LSystemData = {
   },
   angleInDegrees: 90,
   length: 1,
-};
+} as const;
 
 const lsystem = new LSystem(LSYSTEM_DATA.axiom, LSYSTEM_DATA.rules);
 
 export const JesuralemCube: React.FC = () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const instancedMeshRef: any = useRef<InstancedMesh>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [colorMap, metalnessMap, roughnessMap]: any = useLoader(TextureLoader, [
+  const instancedMeshRef = useRef<InstancedMesh>(null);
+  const [colorMap, metalnessMap, roughnessMap] = useLoader(TextureLoader, [
     "base_color.jpg",
     "metallic.jpg",
     "roughness.jpg",
@@ -86,7 +61,9 @@ export const JesuralemCube: React.FC = () => {
       smallCubeScale
     );
 
-    return turtle.render(sentence);
+    const result = turtle.render(sentence);
+    Turtle.normalize(result);
+    return result;
   }, [sentence, smallCubeScale]);
 
   useEffect(() => {
@@ -94,7 +71,6 @@ export const JesuralemCube: React.FC = () => {
       if (instancedMeshRef.current)
         instancedMeshRef.current.setMatrixAt(i, transformations[i]);
     }
-    // Update the instance
     if (instancedMeshRef.current)
       instancedMeshRef.current.instanceMatrix.needsUpdate = true;
   }, [transformations]);
